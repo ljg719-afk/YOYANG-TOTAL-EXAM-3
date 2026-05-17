@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>3차 종합 모의고사</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;-webkit-text-size-adjust:100%}
+.container{max-width:640px;margin:0 auto;padding:16px}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-size:20px;font-weight:800;color:#f8fafc;margin-bottom:4px}
+.header p{font-size:13px;color:#94a3b8}
+.card{background:#1e293b;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #334155}
+.card h2{font-size:16px;color:#60a5fa;margin-bottom:12px}
+.input-wrap label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px}
+.input-wrap input{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#f8fafc;font-size:15px;outline:none}
+.input-wrap input:focus{border-color:#3b82f6}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;margin-top:16px}
+.btn-secondary{background:#334155;color:#94a3b8;margin-top:10px;font-size:13px;padding:10px}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.section-title{background:linear-gradient(135deg,#1e3a5f,#1e293b);padding:12px 16px;margin:20px 0 12px;border-radius:12px;font-size:14px;font-weight:700;color:#60a5fa;border-left:4px solid #3b82f6}
+.q-card{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid #334155}
+.q-num{display:inline-block;background:#3b82f6;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:8px}
+.q-text{font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:12px;line-height:1.7}
+.opt-list{display:flex;flex-direction:column;gap:6px}
+.opt-btn{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#0f172a;border-radius:10px;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
+.opt-btn:active{transform:scale(0.98)}
+.opt-btn.selected{background:#1e3a5f;border-color:#3b82f6}
+.opt-circle{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1.5px solid #475569;display:flex;align-items:center;justify-content:center;font-size:11px;color:#94a3b8;margin-top:1px}
+.opt-btn.selected .opt-circle{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.opt-btn span:last-child{font-size:13px;color:#cbd5e1;line-height:1.5}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#3b82f6,#60a5fa);z-index:100;transition:width .3s}
+.progress-info{text-align:center;font-size:12px;color:#64748b;margin:10px 0}
+.submit-area{padding:20px 0 40px;text-align:center}
+.lock-screen{text-align:center;padding:40px 20px}
+.lock-screen .icon{font-size:48px;margin-bottom:16px}
+.lock-input{width:200px;padding:14px;background:#0f172a;border:2px solid #334155;border-radius:12px;color:#f8fafc;font-size:18px;text-align:center;letter-spacing:4px;outline:none;margin:0 auto;display:block}
+.lock-input:focus{border-color:#3b82f6}
+.lock-msg{font-size:13px;margin-top:10px;min-height:20px}
+.result-header{text-align:center;padding:20px 0}
+.score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;border:4px solid}
+.score-circle.pass{border-color:#22c55e;color:#22c55e}
+.score-circle.fail{border-color:#ef4444;color:#ef4444}
+.score-circle .num{font-size:36px;font-weight:800;line-height:1}
+.score-circle .unit{font-size:12px;margin-top:2px}
+.score-detail{font-size:13px;color:#94a3b8;margin-top:8px}
+.r-card{background:#1e293b;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid}
+.r-card.correct{border-color:#22c55e}
+.r-card.wrong{border-color:#ef4444}
+.r-q{font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:8px;line-height:1.6}
+.r-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.r-badge.correct{background:#166534;color:#86efac}
+.r-badge.wrong{background:#7f1d1d;color:#fca5a5}
+.r-ans{font-size:12px;color:#94a3b8;margin-bottom:4px}
+.r-expl{font-size:12px;color:#64748b;line-height:1.6;padding:8px;background:#0f172a;border-radius:8px;margin-top:6px}
+.admin-panel{max-width:640px;margin:0 auto;padding:16px}
+.adm-section{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid #334155}
+.adm-section h3{font-size:15px;color:#60a5fa;margin-bottom:12px}
+.guide-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #334155}
+.guide-step:last-child{border:none}
+.guide-num{flex-shrink:0;width:28px;height:28px;background:#3b82f6;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.guide-text{font-size:13px;line-height:1.7;color:#cbd5e1}
+.guide-text b{color:#60a5fa}
+.kakao-msg{background:#0f172a;border-radius:10px;padding:14px;margin:10px 0;font-size:13px;line-height:1.8;color:#fbbf24;border:1px dashed #92400e;word-break:keep-all}
+.copy-btn{display:inline-block;padding:6px 14px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;font-size:12px;cursor:pointer;margin-top:6px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<script>
+const ADMIN_PW="admin2025";
+const UNLOCK_CODE="2025";
+const PASS_SCORE=36;
+const TOTAL=60;
+const ANS=[4, 5, 1, 4, 5, 4, 4, 4, 4, 3, 3, 4, 5, 4, 5, 2, 5, 1, 3, 5, 3, 5, 3, 3, 4, 3, 2, 2, 2, 2, 3, 1, 3, 3, 5, 5, 2, 3, 3, 5, 5, 4, 2, 4, 2, 5, 4, 4, 2, 4, 3, 2, 2, 2, 2, 5, 2, 4, 4, 4];
+const SECS=[
+  {t:"제5장 노화에 따른 변화와 질환(1~20번)", s:1, e:20},
+  {t:"제6장 치매·뇌졸중·파킨슨 질환(21~44번)", s:21, e:44},
+  {t:"제7장 건강증진 및 질병예방(45~60번)", s:45, e:60}
+];
+const Q=[
+  {
+    q:"파킨슨병과 감별이 필요한 '본태성 진전(떨림)'의 특징으로 옳은 것은?",
+    o:["가만히 있을 때 떨리고 움직이면 줄어든다",
+       "한쪽에서만 시작된다",
+       "근육 경직과 운동완만이 함께 나타난다",
+       "물건을 잡거나 행동할 때 떨리고, 안정 시에는 줄어든다",
+       "보행 장애가 동반된다"],
+    e:"보행 장애가 동반된다"
+  },
+  {
+    q:"노인성 질병의 특성으로 옳은 것은?",
+    o:["예후 명확",
+       "급성 질병 대부분",
+       "증상 뚜렷",
+       "단독 발생 많음",
+       "수분과 전해질 균형 깨지기 쉬움"],
+    e:"예후 불명확, 만성 질환 위주, 동반 질환 다수."
+  },
+  {
+    q:"당뇨병 대상자의 발 관리 방법으로 옳은 것은?",
+    o:["발톱은 일자로 자른다",
+       "꼭 끼는 신발을 신는다",
+       "양말을 벗고 맨발로 다닌다",
+       "발을 씻은 후에 물기는 남겨 둔다",
+       "발에 열패드를 대어 주어 보온한다"],
+    e:"꼭 끼는 신발을 신는다."
+  },
+  {
+    q:"당뇨병 대상자의 발 관리에 대한 설명으로 옳지 않은 것은?",
+    o:["매일 발을 관찰하여 상처·물집·변색 여부를 확인한다",
+       "발톱은 일자로 자르고 양 끝을 둥글게 다듬지 않는다",
+       "목욕 시 발의 물 온도는 손등으로 먼저 확인한다",
+       "혈액 순환 촉진을 위해 전기장판이나 핫팩으로 발을 따뜻하게 해준다",
+       "맨발로 다니지 않고 항상 잘 맞는 신발을 신는다"],
+    e:"맨발로 다니지 않고 항상 잘 맞는 신발을 신는다"
+  },
+  {
+    q:"골다공증 및 고관절 골절 위험 대상자 중 행동 수정이 필요한 경우는?",
+    o:["연어/달걀 섭취",
+       "규칙적 근력 운동",
+       "바닥 물건 청소",
+       "안경 도수 재조정",
+       "저체중 유지를 위한 다이어트"],
+    e:"저체중은 골절 위험을 높이므로 적정 체중 유지 요망."
+  },
+  {
+    q:"대상자에게 욕창을 발생시킬 가능성이 높은 요양보호사의 행동은?",
+    o:["체위를 자주 변경해 준다",
+       "침상 시트의 주름을 펴 준다",
+       "무릎 사이에 베개를 끼워 준다",
+       "천골 부위에 도넛 베개를 대어 준다",
+       "목욕 후에 피부를 완전히 말려 준다"],
+    e:"목욕 후에 피부를 완전히 말려 준다."
+  },
+  {
+    q:"만성 폐쇄성 폐질환(COPD) 대상자를 돌볼 때 주의사항으로 옳지 않은 것은?",
+    o:["호흡곤란 시 반좌위(상체를 높인 자세)를 취하도록 돕는다",
+       "입술 오므리기 호흡법을 교육한다",
+       "금연을 적극적으로 권장한다",
+       "고농도 산소를 충분히 공급한다",
+       "실내 공기 오염을 줄이고 환기를 자주 한다"],
+    e:"실내 공기 오염을 줄이고 환기를 자주 한다"
+  },
+  {
+    q:"노화에 따른 호흡기계 특성으로 옳은 것은?",
+    o:["폐포 탄력성 증가",
+       "기침 반사 증가",
+       "콧속 점막 습기 증가",
+       "호흡 근육 약화로 피로 증가",
+       "분비물 감소로 감염 위험 낮음"],
+    e:"분비물 감소로 감염 위험 낮음"
+  },
+  {
+    q:"대상자의 피부계 변화가 다음과 같을 때 보고해야 하는 상황은?",
+    o:["손등에 노인성 반점이 생겼다",
+       "눈가에 주름이 생겼다",
+       "얼굴 피부의 탄력성이 떨어졌다",
+       "피부에 발적과 가려움증이 있다",
+       "머리카락이 가늘어졌다"],
+    e:"머리카락이 가늘어졌다."
+  },
+  {
+    q:"노인의 시력 저하와 관련된 안전 관리 방법으로 옳은 것은?",
+    o:["어두운 환경에서 활동하도록 하여 눈을 보호한다",
+       "물건의 위치를 자주 바꾸어 두뇌 자극을 한다",
+       "바닥과 계단에 색 대비가 분명한 테이프를 붙인다",
+       "화장실 조명을 어둡게 하여 눈의 피로를 줄인다",
+       "작은 글씨의 안내문을 사용한다"],
+    e:"화장실 조명을 어둡게 하여 눈의 피로를 줄인다"
+  },
+  {
+    q:"폐결핵에 관한 설명으로 옳은 것은?",
+    o:["바이러스성 감염 질환임",
+       "스테로이드 약물 복용으로 예방할 수 있음",
+       "약물 복용 중 주기적인 간기능 검사가 필요함",
+       "치료 기간 중 증상이 사라지면 약물 복용을 중단함",
+       "오전에 고열이 나고 오후에 열이 내리는 증상이 반복됨"],
+    e:"치료 기간 중 증상이 사라지면 약물 복용을 중단함"
+  },
+  {
+    q:"섬망 대상자의 지남력을 유지하는 방법으로 옳은 것은?",
+    o:["낮에 커튼을 쳐 어둡게 한다",
+       "새 친구를 사귀게 한다",
+       "가족의 방문을 제한한다",
+       "식사할 때 시간을 알려 준다",
+       "밤에 창문을 열어 둔다"],
+    e:"밤에 창문을 열어 둔다."
+  },
+  {
+    q:"노화에 따른 호흡기계 변화와 그에 따른 결과의 연결로 옳지 않은 것은?",
+    o:["폐포 탄력 감소 → 잔기량 증가",
+       "기침 반사 약화 → 이물질 배출 능력 저하",
+       "흉곽 경직 증가 → 호흡 운동 제한",
+       "섬모 운동 감소 → 기관지 분비물 정체",
+       "폐활량 감소 → 가스 교환 능력 향상"],
+    e:"노화에 따른 호흡기계 변화로는 폐포 탄력 감소(잔기량 증가), 기침 반사 약화(이물질 배출 능력 저하), 흉곽 경직(호흡 운동 제한), 섬모 운동 감소(분비물 정체)가 모두 옳은 연결임. 그러나 '폐활량 감소 → 가스 교환 능력 향상'은 잘못된 연결로, 폐활량이 감소하면 가스 교환 능력도 함께 저하됨. 이러한 변화들이 복합적으로 작용하여 노인은 폐렴 등 호흡기 감염에 취약해짐."
+  },
+  {
+    q:"노화에 따른 내분비계의 변화로 옳은 것은?",
+    o:["기초대사량 증가",
+       "갑상샘 호르몬 증가",
+       "뇌하수체 크기 증가",
+       "인슐린 민감성 감소",
+       "공복시 혈당 수치 감소"],
+    e:"공복시 혈당 수치 감소"
+  },
+  {
+    q:"백내장이 발생하는 눈의 부위는?",
+    o:["망막",
+       "각막",
+       "황반",
+       "홍채",
+       "수정체"],
+    e:"백내장은 눈의 수정체가 혼탁해져 빛이 통과하지 못하여 시야가 흐려지는 질환임."
+  },
+  {
+    q:"70세 대상자가 의자에서 갑자기 일어서자 눈앞이 캄캄해지면서 비틀거렸다. 이 증상의 원인과 예방법으로 가장 적절한 것은?",
+    o:["뇌졸중이므로 즉시 119에 신고한다",
+       "기립성 저혈압이므로 천천히 단계적으로 일어서도록 한다",
+       "저혈당이므로 사탕을 먹게 한다",
+       "부정맥이므로 심전도 검사를 받게 한다",
+       "빈혈이므로 철분제를 복용하게 한다"],
+    e:"저혈당이므로 사탕을 먹게 한다"
+  },
+  {
+    q:"욕창 발생 가능성이 가장 높은 경우는?",
+    o:["낮잠 미수면",
+       "취침 시 잦은 뒤척임",
+       "정상 체중 유지",
+       "물 자주 섭취",
+       "영양 부족으로 피하 지방 감소"],
+    e:"완충 지대 감소로 욕창 발생에 취약."
+  },
+  {
+    q:"심부전증 대상자를 돕는 방법으로 옳은 것은?",
+    o:["매일 체중을 측정한다",
+       "식사량을 늘려 제공한다",
+       "계단오르기 운동을 격려한다",
+       "항상 탄력스타킹을 신게 한다",
+       "온냉탕을 오가며 목욕하게 한다"],
+    e:"식사량을 늘려 제공한다."
+  },
+  {
+    q:"노인의 피부 변화에 대한 설명으로 옳은 것은?",
+    o:["피지 분비가 증가하여 피부가 기름지게 된다",
+       "표피가 두꺼워져 외부 자극에 대한 저항력이 높아진다",
+       "피하지방이 감소하여 체온 조절 능력이 떨어진다",
+       "멜라닌 세포가 증가하여 피부가 전체적으로 검어진다",
+       "상처 치유 속도가 빨라진다"],
+    e:"멜라닌 세포가 증가하여 피부가 전체적으로 검어진다"
+  },
+  {
+    q:"노화에 따른 미각의 변화는?",
+    o:["미뢰 개수 증가",
+       "유두 돌기 증가",
+       "입술 탄력 증가",
+       "구강 건조 감소",
+       "구강 점막 재생 능력 감소"],
+    e:"노화가 진행되면 혀의 미뢰 개수가 줄어들고 구강 점막 재생 능력이 떨어지며 구강 건조증이 증가함."
+  },
+  {
+    q:"치매 대상자가 목욕을 심하게 거부하며 소리를 지르고 있을 때 요양보호사의 대응으로 가장 적절한 것은?",
+    o:["강제로 옷을 벗겨 목욕시킨다",
+       "그 날은 목욕을 무기한 연기한다",
+       "대상자의 감정을 먼저 진정시킨 후 부분 세척 등 대안적 방법을 시도한다",
+       "다른 요양보호사를 불러 억지로 목욕시킨다",
+       "수면제를 투여한 후 목욕시킨다"],
+    e:"다른 요양보호사를 불러 억지로 목욕시킨다"
+  },
+  {
+    q:"파킨슨병의 4대 주요 운동 증상에 해당하지 않는 것은?",
+    o:["안정 시 떨림(진전)",
+       "근육 경직",
+       "운동완만(동작이 느려짐)",
+       "자세 불안정",
+       "환각"],
+    e:"4대 운동 증상: 안정 시 떨림, 근육 경직, 운동완만, 자세 불안정. 환각은 비운동 증상임."
+  },
+  {
+    q:"전측두엽 치매(frontotemporal dementia)의 특징적인 초기 증상으로 옳은 것은?",
+    o:["기억력 저하가 가장 먼저 나타난다",
+       "생생한 환시(환각)가 반복된다",
+       "성격 변화와 사회적 행동 장애(탈억제, 무관심 등)가 먼저 나타난다",
+       "안정 시 떨림과 근육 경직이 동반된다",
+       "갑작스러운 편마비가 나타난다"],
+    e:"안정 시 떨림과 근육 경직이 동반된다"
+  },
+  {
+    q:"파킨슨병 대상자가 기립성 저혈압을 보일 때 요양보호사의 대응으로 옳은 것은?",
+    o:["빨리 일어서게 한다",
+       "누운 자세에서 갑자기 세운다",
+       "천천히 단계적으로(눕기→앉기→서기) 일어서도록 돕는다",
+       "물을 적게 마시게 한다",
+       "다리를 높이 올린 채 오래 서 있게 한다"],
+    e:"물을 적게 마시게 한다"
+  },
+  {
+    q:"치매 대상자를 위한 환경 관리 원칙으로 옳지 않은 것은?",
+    o:["환경을 단순하고 일정하게 유지한다",
+       "위험한 물건은 잠금장치가 있는 곳에 보관한다",
+       "적절한 조명과 소음 관리를 한다",
+       "인지 자극을 위해 환경을 자주 변경한다",
+       "익숙한 물건과 사진 등을 배치한다"],
+    e:"익숙한 물건과 사진 등을 배치한다"
+  },
+  {
+    q:"파킨슨병 대상자의 글씨가 점점 작아지는 증상(소서증)의 원인으로 옳은 것은?",
+    o:["시력 저하로 글씨를 작게 쓰게 된다",
+       "손목 관절염으로 손동작이 제한된다",
+       "운동완만(bradykinesia)으로 인해 손 움직임의 범위가 점차 줄어들기 때문이다",
+       "의도적으로 작게 쓰는 것이다",
+       "떨림으로 인해 글씨를 쓰기 어렵기 때문이다"],
+    e:"의도적으로 작게 쓰는 것이다"
+  },
+  {
+    q:"치매 초기 단계에서 대상자의 자존감 유지를 위한 요양보호사의 접근 방법으로 옳은 것은?",
+    o:["대상자의 실수를 항상 지적하여 주의를 준다",
+       "대상자가 할 수 있는 활동에 참여하도록 격려하고 성취감을 느끼게 한다",
+       "모든 일을 대신해주어 실패 경험을 방지한다",
+       "다른 대상자와 비교하여 동기를 부여한다",
+       "어린아이 다루듯 반말을 사용한다"],
+    e:"모든 일을 대신해주어 실패 경험을 방지한다"
+  },
+  {
+    q:"알츠하이머 병에 관한 설명으로 옳은 것은?",
+    o:["초기부터 가족을 못 알아봄",
+       "초기에는 독립적인 생활을 할 수 있음",
+       "초기부터 장기기억력 저하가 나타남",
+       "말기에는 언어적 의사소통을 할 수 있음",
+       "말기에는 과거에 대해 힌트를 주면 기억을 해냄"],
+    e:"초기부터 장기기억력 저하가 나타남"
+  },
+  {
+    q:"뇌졸중 대상자의 배뇨 관리에 대한 설명으로 옳은 것은?",
+    o:["요실금이 있으면 수분 섭취를 극도로 제한한다",
+       "배뇨 간격을 파악하여 규칙적으로 화장실에 가도록 돕는다",
+       "기저귀를 항상 착용시켜 편의를 도모한다",
+       "야간에는 수분 섭취를 전혀 하지 않는다",
+       "요실금은 뇌졸중과 관련이 없다"],
+    e:"기저귀를 항상 착용시켜 편의를 도모한다"
+  },
+  {
+    q:"파킨슨병과 알츠하이머병 치매의 차이점에 대한 설명으로 옳은 것은?",
+    o:["두 질환은 증상이 완전히 동일하다",
+       "파킨슨병은 초기에 운동 증상이 두드러지고, 알츠하이머병은 초기에 기억력 저하가 두드러진다",
+       "알츠하이머병에서만 떨림이 나타난다",
+       "파킨슨병은 인지기능에 전혀 영향을 미치지 않는다",
+       "알츠하이머병은 도파민 부족으로 발생한다"],
+    e:"알츠하이머병에서만 떨림이 나타난다"
+  },
+  {
+    q:"뇌졸중 대상자의 연하장애(삼킴 장애) 관리에 대한 설명으로 옳은 것은?",
+    o:["물과 같은 묽은 액체가 가장 삼키기 쉽다",
+       "고개를 뒤로 젖혀 음식을 넣어준다",
+       "음식의 점도를 높여 걸쭉하게 만들면 삼키기 쉽다",
+       "가능한 빠르게 식사를 마치도록 재촉한다",
+       "식사 후 바로 눕혀야 한다"],
+    e:"가능한 빠르게 식사를 마치도록 재촉한다"
+  },
+  {
+    q:"혈관성 치매에 대한 설명으로 옳은 것은?",
+    o:["뇌혈관 질환(뇌졸중 등)에 의해 뇌 조직이 손상되어 발생하는 치매이다",
+       "서서히 진행되며 계단식 악화를 보이지 않는다",
+       "고혈압, 당뇨병 등의 위험인자와는 관련이 없다",
+       "알츠하이머병보다 발생 빈도가 높다",
+       "초기부터 심한 기억장애만 나타난다"],
+    e:"서서히 진행되며 계단식 악화를 보이지 않는다"
+  },
+  {
+    q:"뇌졸중 대상자의 욕창 예방을 위한 체위 변경 시 주의사항으로 옳은 것은?",
+    o:["하루에 1회 체위를 변경한다",
+       "마비된 쪽으로만 눕히는 것이 좋다",
+       "최소 2시간마다 체위를 변경하되, 마비된 쪽으로 눕힐 때는 시간을 짧게 한다",
+       "욕창이 발생한 부위 위에 눕혀도 된다",
+       "체위 변경 시 피부를 강하게 마찰한다"],
+    e:"욕창이 발생한 부위 위에 눕혀도 된다"
+  },
+  {
+    q:"뇌졸중 대상자의 관절 구축 예방을 위한 방법으로 옳은 것은?",
+    o:["하루 종일 같은 자세로 누워 있게 한다",
+       "마비된 쪽은 절대 움직이지 않게 한다",
+       "정기적으로 관절운동(ROM 운동)을 실시한다",
+       "관절이 아프면 운동을 완전히 중단한다",
+       "마비된 팔다리를 꽉 묶어서 고정한다"],
+    e:"관절이 아프면 운동을 완전히 중단한다"
+  },
+  {
+    q:"치매 대상자의 실종(배회 후 실종) 예방을 위한 관리로 옳은 것을 모두 고른 것은?     ㄱ. 이름·연락처가 적힌 인식표를 옷에 부착한다   ㄴ. GPS 위치추적기를 활용한다     ㄷ. 현관문에 이중 잠금장치를 설치한다   ㄹ. 최근 사진을 보관하여 실종 시 활용한다?",
+    o:["ㄱ, ㄴ",
+       "ㄱ, ㄴ, ㄷ",
+       "ㄱ, ㄷ, ㄹ",
+       "ㄴ, ㄷ, ㄹ",
+       "ㄱ, ㄴ, ㄷ, ㄹ"],
+    e:"치매 대상자의 배회로 인한 실종 예방을 위해 모든 방법이 필요함. ㄱ. 이름·연락처·주소가 적힌 인식표(팔찌·목걸이·옷 라벨)를 부착함. ㄴ. GPS 위치추적기(스마트워치·신발 부착형 등)를 활용하여 위치를 파악함. ㄷ. 현관문에 이중 잠금장치를 설치하되, 화재 시 대피가 가능하도록 함. ㄹ. 최근 촬영한 전신 사진을 보관하여 실종 시 경찰 신고에 활용함. 또한 경찰청 지문 사전등록제도와 치매안심센터의 배회감지기 대여 서비스도 활용할 수 있음."
+  },
+  {
+    q:"대상자에게 소뇌 손상이 발생했을 때 나타나는 특징적인 증상은?",
+    o:["감정을 조절하지 못함",
+       "인지기능의 저하가 나타남",
+       "말의 내용을 이해하지 못함",
+       "한 개의 물체가 두 개로 보임",
+       "자세의 균형을 유지하지 못함 제7장 노인의 건강증진 및 질병예방 (45문항)"],
+    e:"소뇌는 균형 유지를 담당하며, 손상 시 운동 실조증이 나타남."
+  },
+  {
+    q:"뇌졸중 대상자의 재활 시 '건측 과사용 증후군(learned non-use)'에 대한 설명으로 옳은 것은?",
+    o:["마비된 쪽을 과도하게 사용하는 것이다",
+       "건강한 쪽만 사용하여 마비된 쪽의 회복이 더 지연되는 것이다",
+       "재활을 너무 많이 하여 건강한 쪽이 손상되는 것이다",
+       "마비된 쪽과 건강한 쪽을 동시에 사용하는 것이다",
+       "재활 운동이 필요 없는 상태이다"],
+    e:"재활을 너무 많이 하여 건강한 쪽이 손상되는 것이다"
+  },
+  {
+    q:"뇌졸중 후 어깨 아탈구를 예방하기 위한 방법으로 옳은 것은?",
+    o:["마비된 팔을 항상 높이 올려놓는다",
+       "마비된 팔을 아래로 늘어뜨려 둔다",
+       "마비된 팔을 팔걸이(슬링)로 지지하고 앉을 때 팔받침에 올려놓는다",
+       "마비된 팔을 강하게 당겨서 운동시킨다",
+       "마비된 쪽 어깨에 뜨거운 찜질을 한다"],
+    e:"마비된 팔을 강하게 당겨서 운동시킨다"
+  },
+  {
+    q:"치매 대상자에게 회상 치료(reminiscence therapy)를 적용할 때의 원칙으로 옳지 않은 것은?",
+    o:["대상자의 과거 사진이나 익숙한 물건을 활용한다",
+       "장기 기억(오래된 기억)을 활용하는 것이 효과적이다",
+       "정확한 기억을 요구하고 틀린 기억은 바로 교정한다",
+       "대상자의 자존감과 정서적 안정에 도움이 된다",
+       "그룹 활동으로 진행하면 사회적 교류도 촉진할 수 있다"],
+    e:"대상자의 자존감과 정서적 안정에 도움이 된다"
+  },
+  {
+    q:"뇌졸중에 대한 설명으로 옳은 것은? (혈관이 막히거나 터져서 발생)",
+    o:["도파민 부족 발생",
+       "좌뇌 손상 시 좌측 마비 발생",
+       "측두엽 손상 시 비틀거림 발생",
+       "안정 시 떨림이 특징임",
+       "혈관이 막히거나 터져서 발생"],
+    e:"뇌졸중은 뇌 혈관이 막히는 뇌경색과 터지는 뇌출혈을 통틀어 이르는 질환임."
+  },
+  {
+    q:"치매 대상자의 행동심리증상(BPSD)에 대한 설명으로 옳지 않은 것은?",
+    o:["배회, 공격성, 초조, 망상, 환각 등이 포함된다",
+       "치매 중기에 가장 심하게 나타나는 경향이 있다",
+       "비약물적 접근(환경 조절, 음악 치료 등)을 우선 시도한다",
+       "행동심리증상은 돌봄 부담의 주요 원인이다",
+       "약물 치료만이 유일한 해결책이다"],
+    e:"행동심리증상(BPSD: Behavioral and Psychological Symptoms of Dementia)에는 배회, 공격성, 초조·불안, 의심·망상, 환각, 수면 장애, 부적절한 성적 행동 등이 포함됨. BPSD 관리에서는 약물 치료보다 비약물적 접근(환경 조절, 일과 구조화, 음악·미술·회상 치료, 관심 전환 등)을 우선 시도하는 것이 원칙임. 약물 치료는 비약물적 방법으로 조절이 안 될 때 최소 용량으로 사용하며, 항정신병 약물은 노인에서 부작용 위험이 높으므로 신중하게 사용해야 함."
+  },
+  {
+    q:"치매 대상자의 안전 관리로 옳지 않은 것은?",
+    o:["욕실 바닥에 미끄럼 방지 매트를 깔아준다",
+       "위험한 물건은 잠금장치가 있는 곳에 보관한다",
+       "가스레인지 안전장치를 설치한다",
+       "문턱을 높게 만들어 외출을 어렵게 한다",
+       "이름, 연락처가 적힌 명찰이나 인식표를 부착한다"],
+    e:"이름, 연락처가 적힌 명찰이나 인식표를 부착한다"
+  },
+  {
+    q:"치매 대상자가 식사 시간에 식사를 거부하며 '이 음식에 독이 들어 있다'고 주장할 때 요양보호사의 대응으로 가장 적절한 것은?",
+    o:["'독이 없다'고 강하게 설득한다",
+       "대상자 앞에서 같은 음식을 먼저 먹어 보여주며 안심시킨다",
+       "대상자를 무시하고 억지로 먹인다",
+       "정신과 약물을 즉시 투여한다",
+       "식사를 포기하고 다음 끼니까지 기다린다"],
+    e:"대상자를 무시하고 억지로 먹인다"
+  },
+  {
+    q:"파킨슨병에서 나타나는 '안정 시 떨림(진전)'의 특징으로 옳은 것은?",
+    o:["운동할 때만 떨린다",
+       "양쪽 팔다리가 동시에 떨린다",
+       "잠잘 때 심하게 떨린다",
+       "가만히 있을 때 손이 떨리고, 움직이면 떨림이 줄어든다",
+       "떨림은 머리에서만 나타난다"],
+    e:"떨림은 머리에서만 나타난다"
+  },
+  {
+    q:"노인의 구강 건강 관리에 대한 설명으로 옳은 것은?",
+    o:["의치(틀니)는 끼운 채로 잠을 자야 한다",
+       "구강 건조증은 충치와 구강 감염 위험을 높인다",
+       "잇몸 출혈이 있으면 양치를 중단한다",
+       "노인의 구강 관리는 전신 건강과 무관하다",
+       "의치 세척은 일주일에 1회면 충분하다"],
+    e:"잇몸 출혈이 있으면 양치를 중단한다"
+  },
+  {
+    q:"노인 영양 문제 발생 요인은?",
+    o:["칼슘 흡수 증가",
+       "소화액 증가",
+       "삼킴 능력 증가",
+       "구강 건조 감소",
+       "갈증 반응 저하"],
+    e:"갈증 반응 능력이 저하되어 탈수나 영양 불균형이 오기 쉬움."
+  },
+  {
+    q:"당뇨병 대상자의 운동 방법으로 옳은 것은?",
+    o:["혈당이 떨어질 때 운동한다",
+       "고강도에서 저강도 순으로 운동한다",
+       "식후 바로 운동한다",
+       "매일 30분 정도 규칙적으로 운동한다",
+       "혈당이 300mg/dL 이상일 경우 운동강도를 높인다"],
+    e:"혈당이 300mg/dL 이상일 경우 운동강도를 높인다."
+  },
+  {
+    q:"노인의 절주를 위한 지원 방법으로 옳지 않은 것은?",
+    o:["음주 일지를 작성하여 자신의 음주 습관을 점검하게 한다",
+       "절주 결심을 주변 사람에게 알리도록 격려한다",
+       "집안에 술을 보관하지 않도록 한다",
+       "소량의 음주는 건강에 전혀 해롭지 않으므로 완전 금주는 필요 없다고 안내한다",
+       "술 대신 할 수 있는 취미 활동을 함께 찾아본다"],
+    e:"술 대신 할 수 있는 취미 활동을 함께 찾아본다"
+  },
+  {
+    q:"노인이 운동을 기피하게 되는 요인은? (균형 및 조정 능력 감소)",
+    o:["관절 뻣뻣함 감소",
+       "균형 및 조정 능력 감소",
+       "폐 조직 탄력성 증가",
+       "심장 수축력 증가",
+       "자극 반응 증가"],
+    e:"폐 조직 탄력성 증가"
+  },
+  {
+    q:"감염 예방을 위한 요양보호사의 자가관리 방법으로 옳은 것은?",
+    o:["손으로 입을 가리고 기침을 한다",
+       "독감 예방접종은 6개월마다 받아야 한다",
+       "결핵 진단검사는 3개월마다 받아야 한다",
+       "임신한 경우 풍진 감염 대상자와 접촉하지 않는다",
+       "노로바이러스에 감염되면 가운을 입고 업무를 계속한다"],
+    e:"노로바이러스에 감염되면 가운을 입고 업무를 계속한다."
+  },
+  {
+    q:"노인의 피부 관리에 대한 설명으로 옳은 것은?",
+    o:["뜨거운 물로 자주 씻어야 피부가 깨끗해진다",
+       "보습제는 피부가 건조할 때만 바른다",
+       "미지근한 물로 씻고, 피부가 촉촉한 상태에서 보습제를 바른다",
+       "강한 비누를 사용하여 세균을 제거한다",
+       "피부 건조는 노화의 정상적 현상이므로 관리할 필요가 없다"],
+    e:"강한 비누를 사용하여 세균을 제거한다"
+  },
+  {
+    q:"건강 증진을 위한 운동 방법은?",
+    o:["빠른 방향 전환 운동 실시",
+       "개인 신체 능력에 맞는 운동 실시",
+       "고강도에서 중강도로 진행",
+       "준비 운동 2~3분 이내 실시",
+       "시간 부족 시 마무리 운동 생략"],
+    e:"고강도에서 중강도로 진행"
+  },
+  {
+    q:"대상자의 영양관리 방법으로 옳은 것은?",
+    o:["대상자가 좋아하는 음식만 만들어 준다",
+       "과일류는 하루 1회 이상 간식으로 섭취한다",
+       "철분 흡수를 돕기 위해 비타민D를 섭취한다",
+       "동물성 단백질 위주로 하루 세끼 식사를 한다",
+       "음식을 한꺼번에 많이 만들어 놓고 계속 섭취한다"],
+    e:"철분 흡수를 돕기 위해 비타민D를 섭취한다."
+  },
+  {
+    q:"노인 대상자가 복용 중인 약물을 다른 대상자에게 나누어 주었을 때 요양보호사의 대응으로 가장 적절한 것은?",
+    o:["비슷한 증상이면 괜찮다고 안심시킨다",
+       "즉시 양쪽 대상자의 상태를 확인하고 의료진에게 보고한다",
+       "약을 돌려받아 다시 복용하게 한다",
+       "다음부터 조심하라고만 말한다",
+       "약을 나누어 준 대상자만 주의를 준다"],
+    e:"약을 돌려받아 다시 복용하게 한다"
+  },
+  {
+    q:"금연으로 기대할 수 있는 결과는?",
+    o:["기대 수명이 금연 전보다 10~15년 줄어든다",
+       "정자수가 증가하고 성 기능이 향상된다",
+       "심장 발작 위험이 증가한다",
+       "폐암으로 사망할 확률이 증가한다",
+       "혈압이 정상보다 높아진다"],
+    e:"심장 발작 위험이 증가한다"
+  },
+  {
+    q:"노인에게 권장되는 예방접종에 관한 설명으로 옳은 것은?",
+    o:["결핵은 10년마다 1회 접종한다",
+       "대상포진은 매년 1회 접종한다",
+       "파상풍은 5년마다 1회 접종한다",
+       "인플루엔자는 3년마다 1회 접종한다",
+       "폐렴구균은 65세 이후 1회 접종한다"],
+    e:"폐렴구균은 65세 이후 1회 접종을 권장함. 인플루엔자는 매년 1회, 파상풍은 10년마다 추가 접종함."
+  },
+  {
+    q:"노인의 영양 관리에서 단백질 섭취의 중요성에 대한 설명으로 옳은 것은?",
+    o:["노인은 단백질 필요량이 젊은 성인보다 적다",
+       "단백질은 근감소증(sarcopenia) 예방에 중요한 영양소이다",
+       "단백질은 한 끼에 많이 섭취하는 것이 효과적이다",
+       "단백질 섭취는 신장 기능과 무관하다",
+       "식물성 단백질만 섭취하면 충분하다"],
+    e:"단백질은 한 끼에 많이 섭취하는 것이 효과적이다"
+  },
+  {
+    q:"노인에게 권장되는 예방 접종에 대한 설명으로 옳은 것은?",
+    o:["폐렴구균은 매년 1회 접종한다",
+       "결핵은 10년마다 1회 접종한다",
+       "파상풍은 5년마다 1회 접종한다",
+       "대상포진은 60세 이상부터 1회 접종한다",
+       "인플루엔자는 3년마다 1회 접종한다"],
+    e:"인플루엔자는 3년마다 1회 접종한다"
+  },
+  {
+    q:"노인에게 약물중독의 위험이 증가하는 이유는?",
+    o:["대장의 운동성 증가",
+       "심장 근육의 수축력 증가",
+       "신경전달물질의 분비 증가",
+       "신장의 배설능력 감소",
+       "폐 조직의 탄력성 감소"],
+    e:"폐 조직의 탄력성 감소"
+  },
+  {
+    q:"노인의 수면 위생(sleep hygiene) 관리 방법으로 옳지 않은 것은?",
+    o:["매일 같은 시간에 잠자리에 들고 같은 시간에 일어난다",
+       "침실은 어둡고 조용하며 적절한 온도를 유지한다",
+       "낮잠은 30분 이내로 제한한다",
+       "밤에 잠이 오지 않으면 침대에서 TV를 보며 기다린다",
+       "카페인과 알코올은 취침 전 4~6시간 전부터 피한다"],
+    e:"카페인과 알코올은 취침 전 4~6시간 전부터 피한다"
+  }
+];
+const C=["①","②","③","④","⑤"];
+</script>
+<div class="progress-bar" id="progBar"></div>
+<div id="startScreen" class="container">
+  <div class="header"><h1>요양보호사 양성과정<br>3차 종합 모의고사</h1><p>제5장~제7장 기출 종합 | 60문항</p></div>
+  <div class="card"><h2>응시자 정보</h2><div class="input-wrap"><label>이름을 입력하세요</label><input type="text" id="nameInput" placeholder="홍길동" autocomplete="off"></div><button class="btn btn-primary" onclick="startExam()">시험 시작</button></div>
+  <button class="btn btn-secondary" onclick="showAdmin()">관리자 모드</button>
+</div>
+<div id="examScreen" class="container hidden"><div class="progress-info" id="progInfo"></div><div id="examBody"></div><div class="submit-area"><button class="btn btn-danger" onclick="submitExam()">답안 제출</button></div></div>
+<div id="lockScreen" class="container hidden"><div class="lock-screen"><div class="icon">🔒</div><h2 style="font-size:18px;margin-bottom:8px">답안이 제출되었습니다</h2><p style="font-size:14px;color:#94a3b8;margin-bottom:20px">결과를 확인하려면 결과확인 코드를 입력하세요</p><input type="text" class="lock-input" id="unlockInput" placeholder="코드" maxlength="10" inputmode="numeric"><button class="btn btn-primary" style="width:200px;margin:12px auto" onclick="tryUnlock()">결과 확인</button><p class="lock-msg" id="lockMsg"></p><p style="font-size:12px;color:#475569;margin-top:20px">시험 종료 후 관리자가 카카오톡에<br>결과확인 코드를 안내합니다</p></div></div>
+<div id="resultScreen" class="container hidden"></div>
+<div id="adminScreen" class="hidden"><div class="admin-panel"><div class="header"><h1>관리자 모드</h1><p>시험 운영 관리</p></div><div id="admContent"></div><button class="btn btn-secondary" onclick="hideAdmin()">← 메인으로 돌아가기</button></div></div>
+<script>
+let userName="",answers=new Array(TOTAL).fill(0),submitted=false;
+function startExam(){const n=document.getElementById("nameInput").value.trim();if(!n){alert("이름을 입력해 주세요.");return}userName=n;const saved=localStorage.getItem("exam3rd_"+userName);if(saved){const d=JSON.parse(saved);answers=d.answers;submitted=true;document.getElementById("startScreen").classList.add("hidden");document.getElementById("lockScreen").classList.remove("hidden");return}buildExam();document.getElementById("startScreen").classList.add("hidden");document.getElementById("examScreen").classList.remove("hidden");updateProgress()}
+function buildExam(){let h="",si=0;Q.forEach((q,i)=>{if(si<SECS.length&&(i+1)===SECS[si].s){h+=`<div class="section-title">${SECS[si].t}</div>`;si++}h+=`<div class="q-card" id="q${i}"><span class="q-num">${i+1}번</span><div class="q-text">${q.q}</div><div class="opt-list">`;q.o.forEach((o,j)=>{h+=`<div class="opt-btn" onclick="selectOpt(this,${i},${j+1})"><span class="opt-circle">${C[j]}</span><span>${o}</span></div>`});h+=`</div></div>`});document.getElementById("examBody").innerHTML=h}
+function selectOpt(el,qi,oi){if(submitted)return;const opts=el.parentElement.children;for(let o of opts)o.classList.remove("selected");el.classList.add("selected");answers[qi]=oi;updateProgress()}
+function updateProgress(){const a=answers.filter(x=>x>0).length;document.getElementById("progBar").style.width=(a/TOTAL*100)+"%";document.getElementById("progInfo").textContent=`${a} / ${TOTAL} 문항 응답 완료`}
+function submitExam(){const a=answers.filter(x=>x>0).length;const u=TOTAL-a;let msg=`총 ${TOTAL}문항 중 ${a}문항 응답하셨습니다.`;if(u>0)msg+=`\n미응답 ${u}문항이 있습니다.`;msg+="\n\n제출하시겠습니까? 제출 후에는 수정할 수 없습니다.";if(!confirm(msg))return;submitted=true;localStorage.setItem("exam3rd_"+userName,JSON.stringify({answers:answers,time:new Date().toISOString()}));document.getElementById("examScreen").classList.add("hidden");document.getElementById("lockScreen").classList.remove("hidden");document.getElementById("progBar").style.width="100%"}
+function tryUnlock(){const code=document.getElementById("unlockInput").value.trim();if(code===UNLOCK_CODE){showResult()}else{document.getElementById("lockMsg").textContent="코드가 일치하지 않습니다.";document.getElementById("lockMsg").style.color="#ef4444"}}
+function showResult(){document.getElementById("lockScreen").classList.add("hidden");document.getElementById("resultScreen").classList.remove("hidden");let correct=0;answers.forEach((a,i)=>{if(a===ANS[i])correct++});const score=Math.round(correct/TOTAL*100);const pass=correct>=PASS_SCORE;let h=`<div class="result-header"><div class="score-circle ${pass?'pass':'fail'}"><div class="num">${score}</div><div class="unit">점</div></div><h2 style="font-size:18px;color:${pass?'#22c55e':'#ef4444'}">${pass?'🎉 합격':'다시 도전해 보세요'}</h2><div class="score-detail">${TOTAL}문항 중 ${correct}문항 정답 (합격기준: ${PASS_SCORE}문항)</div></div>`;let si=0;Q.forEach((q,i)=>{if(si<SECS.length&&(i+1)===SECS[si].s){h+=`<div class="section-title">${SECS[si].t}</div>`;si++}const ok=answers[i]===ANS[i];h+=`<div class="r-card ${ok?'correct':'wrong'}"><span class="r-badge ${ok?'correct':'wrong'}">${ok?'✓ 정답':'✗ 오답'}</span><div class="r-q">${i+1}. ${q.q}</div>`;if(!ok)h+=`<div class="r-ans">내 답: ${C[answers[i]-1]||'미응답'} ${answers[i]>0?q.o[answers[i]-1]:''}</div>`;h+=`<div class="r-ans" style="color:#60a5fa">정답: ${C[ANS[i]-1]} ${q.o[ANS[i]-1]}</div><div class="r-expl">💡 ${q.e}</div></div>`});h+=`<div style="padding:20px 0;text-align:center"><button class="btn btn-secondary" onclick="resetExam()">다시 시험 보기</button></div>`;document.getElementById("resultScreen").innerHTML=h}
+function resetExam(){localStorage.removeItem("exam3rd_"+userName);location.reload()}
+function showAdmin(){const pw=prompt("관리자 비밀번호를 입력하세요:");if(pw!==ADMIN_PW){if(pw!==null)alert("비밀번호가 일치하지 않습니다.");return}document.getElementById("startScreen").classList.add("hidden");document.getElementById("adminScreen").classList.remove("hidden");let h=`<div class="adm-section"><h3>📋 시험 운영 가이드</h3><div class="guide-step"><div class="guide-num">1</div><div class="guide-text"><b>시험 전</b> — index.html을 Netlify Drop에 업로드 후 링크를 카카오톡 단체방에 공유합니다.</div></div><div class="guide-step"><div class="guide-num">2</div><div class="guide-text"><b>시험 중</b> — 교육생이 링크를 터치하여 이름 입력 후 응시합니다.</div></div><div class="guide-step"><div class="guide-num">3</div><div class="guide-text"><b>시험 후</b> — 아래 카카오톡 안내 문구를 단체방에 전송합니다.</div></div></div>`;const k1="📝 3차 종합 모의고사 안내\n\n아래 링크를 터치하여 시험에 응시해 주세요.\n이름을 입력하신 후 시험이 시작됩니다.\n\n⏰ 시험 시간: 제한 없음\n📌 총 60문항 (제5장~제7장 기출 종합)\n✅ 60점 이상 합격\n\n👉 시험 링크: (여기에 링크 붙여넣기)";const k2="✅ 시험이 종료되었습니다.\n\n결과확인 코드: "+UNLOCK_CODE+"\n\n제출 화면에서 위 코드를 입력하면\n점수와 해설을 확인할 수 있습니다.\n\n60문항 중 "+PASS_SCORE+"문항(60점) 이상이면 합격입니다.";h+=`<div class="adm-section"><h3>💬 카카오톡 발송 문구</h3><p style="font-size:12px;color:#94a3b8;margin-bottom:8px">아래 문구를 복사하여 카카오톡에 붙여넣기 하세요</p><div class="kakao-msg">${k1.replace(/\n/g,"<br>")}</div><button class="copy-btn" onclick="copyText(\`${k1}\`)">📋 시험 안내 복사</button><div class="kakao-msg" style="margin-top:16px">${k2.replace(/\n/g,"<br>")}</div><button class="copy-btn" onclick="copyText(\`${k2}\`)">📋 결과 안내 복사</button></div>`;h+=`<div class="adm-section"><h3>📊 정답표 (60문항)</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px">`;ANS.forEach((a,i)=>{h+=`<div style="text-align:center;padding:6px 0;background:#0f172a;border-radius:8px;font-size:12px"><span style="color:#64748b">${i+1}.</span> <span style="color:#60a5fa;font-weight:700">${C[a-1]}</span></div>`});h+=`</div></div>`;document.getElementById("admContent").innerHTML=h}
+function hideAdmin(){document.getElementById("adminScreen").classList.add("hidden");document.getElementById("startScreen").classList.remove("hidden")}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>alert("복사되었습니다!")).catch(()=>{const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("복사되었습니다!")})}
+</script>
+</body>
+</html>
